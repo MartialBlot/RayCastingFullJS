@@ -10,14 +10,19 @@ let ctx = canvas.getContext("2d");
 let map = ['111111111111', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '111111111111'];
 console.log(map)
 // Player position
-let dir_player = 300;
+let dir_player = 270;
 let FOV = 60;
 let cube_size = 1;
 let x = canvasWidth;
 let y = canvasHeight;
 
-let pos_xInit = 5.5;
-let pos_yInit = 3.5;
+//Wall's color
+let styleWall;
+//Last check by x or y
+let dirWall;
+
+let pos_xInit = 1.5;
+let pos_yInit = 1.5;
 
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
@@ -33,22 +38,39 @@ function draw(){
         let angle = dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth );
         map_x = pos_x;
         map_y = pos_y;
-        step_x = Math.cos( angle * ( Math.PI/180 ) * 0.1 );
-        step_y = -Math.sin( angle * ( Math.PI/180 ) * 0.1 );
-        while( parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0 ){
-            map_x += step_x;
-            map_y += step_y;
+        step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.01;
+        step_y = -Math.sin( angle * ( Math.PI/180 )  )* 0.01;
+        
+        while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
+            map_x = map_x + step_x;
+            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1)
+            {
+                styleWall = 'red';
+                dirWall = 1;
+                break;
+            }
+            map_y = map_y + step_y
+            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1)
+            {
+                styleWall = 'orange';
+                dirWall = 2;
+                break;
+            }
         }
         
-        map_x = (map_x - pos_x);
-        map_y = (map_y - pos_y);
+        if(dirWall === 1){
+            map_x = (Math.floor(map_x) - pos_x);
+            map_y = (map_y - pos_y);
+        }
+        
+        if(dirWall === 2){
+            map_x = (map_x - pos_x);
+            map_y = (Math.floor(map_y) - pos_y);
+        }
         
         let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2)));
-        const distance_ref = (canvasWidth/2)/Math.tan((FOV/2) * 180 / Math.PI);
-        let wall_height = Math.abs(distance_ref) / distance;
-        // console.log(distance)
-        // console.log(distance_ref)
-        console.log(wall_height)
+        const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * 180 / Math.PI));
+        let wall_height = distance_ref / distance;
         
         let draw_start = (y - wall_height) / 2;
         let draw_end = y - draw_start;
@@ -64,14 +86,14 @@ function draw(){
         ctx.beginPath();
         ctx.moveTo(x, draw_start);
         ctx.lineTo(x, draw_end);
-        ctx.strokeStyle = 'orange';
+        ctx.strokeStyle = styleWall;
         ctx.stroke();
         
         //Draw Floor
         ctx.beginPath();
         ctx.moveTo(x, draw_end);
         ctx.lineTo(x, y);
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = 'brown';
         ctx.stroke();
     }
 }
