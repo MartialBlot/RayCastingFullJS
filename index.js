@@ -34,8 +34,7 @@ function draw(){
     for ( let x = 0; x < canvasWidth; x++ ) {
         let pos_x = pos_xInit;
         let pos_y = pos_yInit;
-        
-        let angle = dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth );
+        let angle = dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth );        
         map_x = pos_x;
         map_y = pos_y;
         step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.01;
@@ -59,13 +58,15 @@ function draw(){
         }
         
         if(dirWall === 1){
-            map_x = (Math.floor(map_x) - pos_x);
+            // map_x = (Math.floor(map_x) - pos_x); FISH-EYE
+            map_x = (map_x - pos_x);
             map_y = (map_y - pos_y);
         }
         
         if(dirWall === 2){
+            // map_y = (Math.floor(map_y) - pos_y); FISH-EYE
             map_x = (map_x - pos_x);
-            map_y = (Math.floor(map_y) - pos_y);
+            map_y = (map_y - pos_y);
         }
         
         let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2)));
@@ -110,12 +111,11 @@ document.addEventListener('keyup',function(e){
 function gameLoop() {
     //right
     if (keyState[39] || keyState[68]){
-        dir_player-=20;
-        console.log('pass')
+        dir_player-=5;
     }
     //left
     if (keyState[37] || keyState[65]){
-        dir_player+=20;        
+        dir_player+=5;        
     }
     //up
     if (keyState[38] || keyState[87]){    
