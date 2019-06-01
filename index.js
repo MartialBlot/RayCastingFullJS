@@ -120,7 +120,6 @@ function gameLoop() {
     if(keyState[37]){
         dir_player+=3;
     }
-
     //right
     if (keyState[68]){
         pos_xInit += 0.1;      
@@ -130,11 +129,11 @@ function gameLoop() {
         pos_xInit -= 0.1;        
     }
     //up
-    if (keyState[38] || keyState[87]){    
+    if (keyState[87]){    
         pos_yInit += 0.1;
     }
     //down
-    if (keyState[40] || keyState[83]){
+    if (keyState[83]){
         pos_yInit -= 0.1;
     }
     draw();
