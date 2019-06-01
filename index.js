@@ -37,8 +37,8 @@ function draw(){
         let angle = dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth );        
         map_x = pos_x;
         map_y = pos_y;
-        step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.01;
-        step_y = -Math.sin( angle * ( Math.PI/180 )  )* 0.01;
+        step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.03;
+        step_y = -Math.sin( angle * ( Math.PI/180 )  )* 0.03;
         
         while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
             map_x = map_x + step_x;
@@ -58,13 +58,15 @@ function draw(){
         }
         
         if(dirWall === 1){
-            // map_x = (Math.floor(map_x) - pos_x); FISH-EYE
+            //FISH-EYE
+            // map_x = (Math.floor(map_x) - pos_x); 
             map_x = (map_x - pos_x);
             map_y = (map_y - pos_y);
         }
         
         if(dirWall === 2){
-            // map_y = (Math.floor(map_y) - pos_y); FISH-EYE
+            //FISH-EYE
+            // map_y = (Math.floor(map_y) - pos_y);
             map_x = (map_x - pos_x);
             map_y = (map_y - pos_y);
         }
@@ -109,21 +111,31 @@ document.addEventListener('keyup',function(e){
 },true);
 
 function gameLoop() {
+    //Camera
     //right
-    if (keyState[39] || keyState[68]){
-        dir_player-=5;
+    if(keyState[39]){
+        dir_player-=3;
+    }
+    //Gauche
+    if(keyState[37]){
+        dir_player+=3;
+    }
+
+    //right
+    if (keyState[68]){
+        pos_xInit += 0.1;      
     }
     //left
-    if (keyState[37] || keyState[65]){
-        dir_player+=5;        
+    if (keyState[65]){
+        pos_xInit -= 0.1;        
     }
     //up
     if (keyState[38] || keyState[87]){    
-        
+        pos_yInit += 0.1;
     }
     //down
     if (keyState[40] || keyState[83]){
-        
+        pos_yInit -= 0.1;
     }
     draw();
     setTimeout(gameLoop, 10);
