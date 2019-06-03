@@ -1,6 +1,6 @@
 let canvas = document.getElementById('gameSpace');
-let canvasHeight = 600;
-let canvasWidth = 960;
+let canvasHeight = 480;
+let canvasWidth = 640;
 canvas.height = canvasHeight;
 canvas.width = canvasWidth;
 let ctx = canvas.getContext("2d");
@@ -37,8 +37,8 @@ function draw(){
         let angle = dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth );        
         map_x = pos_x;
         map_y = pos_y;
-        step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.03;
-        step_y = -Math.sin( angle * ( Math.PI/180 )  )* 0.03;
+        step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.01;
+        step_y = -Math.sin( angle * ( Math.PI/180 )  )* 0.01;
         
         while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
             map_x = map_x + step_x;
@@ -71,7 +71,7 @@ function draw(){
             map_y = (map_y - pos_y);
         }
         
-        let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2)));
+        let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2))) * Math.cos(Math.abs((dir_player - angle) * Math.PI/180));
         const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * 180 / Math.PI));
         let wall_height = distance_ref / distance;
         
