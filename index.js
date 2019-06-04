@@ -9,18 +9,21 @@ let ctx = canvas.getContext("2d");
 let duke = new Image();
 duke.src='./sprites/Duke.png';
 
-let dukeWidth = 280; 
+let dukeWidth = 100; 
 let dukeHeight = 110; 
 let dukeRows = 1; 
-let dukeCols = 3; 
+let dukeCols = 1; 
 let dWidth = dukeWidth/dukeCols;  
 let dHeight = dukeHeight/dukeRows; 
 let dukeCurFrame = 0; 
-let dukeFrameCount = 3; 
+let dukeFrameCount = 1; 
 let dukeX=300;
 let dukeY=370; 
 let dukeSrcX= 280; 
-let dukeSrcY= 460; 
+let dukeSrcY= 460;
+
+let shootSound = new Audio('sound/pistol.mp3');
+let oneShoot = true;
 
 //Map test
 let map = ['111111111111', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '111111111111'];
@@ -43,9 +46,9 @@ let pos_yInit = 1.5;
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
     
-    // dukeCurFrame = ++dukeCurFrame % dukeFrameCount;
-    // dukeSrcX = dukeCurFrame * dWidth;
-    // ctx.clearRect(dukeX,dukeY,dWidth,dHeight);
+    dukeCurFrame = ++dukeCurFrame % dukeFrameCount;
+    dukeSrcX = dukeCurFrame * dWidth;
+    ctx.clearRect(dukeX,dukeY,dWidth,dHeight);
 }
 
 //Game loop
@@ -118,9 +121,8 @@ function draw(){
         ctx.lineTo(x, y);
         ctx.strokeStyle = 'brown';
         ctx.stroke();
-
-    ctx.drawImage(duke,dukeSrcX, dukeSrcY,dWidth,dHeight,dukeX,dukeY,dWidth,dHeight);
-
+        
+        ctx.drawImage(duke,dukeSrcX, dukeSrcY,dWidth,dHeight,dukeX,dukeY,dWidth,dHeight);
     }
 }
 
@@ -131,6 +133,7 @@ document.addEventListener('keydown',function(e){
 },true);    
 document.addEventListener('keyup',function(e){
     keyState[e.keyCode || e.which] = false;
+    oneShoot= true; 
 },true);
 
 function gameLoop() {
@@ -159,7 +162,47 @@ function gameLoop() {
     if (keyState[83]){
         pos_yInit -= 0.1;
     }
+    //Shoot
+    if (keyState[18]){
+        while(oneShoot){
+        oneShoot = false;
+        dukeShoot();
+        shootSound.play();
+        }
+    }
     draw();
     setTimeout(gameLoop, 10);
 }
 gameLoop();
+
+function dukeInit(){
+    dukeWidth = 100; 
+    dukeHeight = 110; 
+    dukeRows = 1; 
+    dukeCols = 1;
+    dWidth = dukeWidth/dukeCols;
+    dHeight = dukeHeight/dukeRows;
+    dukeCurFrame = 0; 
+    dukeFrameCount = 1; 
+    dukeX=300;
+    dukeY=370; 
+    dukeSrcX= 280; 
+    dukeSrcY= 460;
+} 
+
+function dukeShoot(){
+    dukeWidth = 280; 
+    dukeHeight = 110; 
+    dukeRows = 1; 
+    dukeCols = 3; 
+    dWidth = dukeWidth/dukeCols;  
+    dHeight = dukeHeight/dukeRows; 
+    dukeCurFrame = 0; 
+    dukeFrameCount = 3; 
+    dukeX=300;
+    dukeY=370; 
+    dukeSrcX= 280; 
+    dukeSrcY= 460;
+
+    setTimeout(dukeInit, 100)    
+}
