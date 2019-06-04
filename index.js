@@ -5,6 +5,22 @@ canvas.height = canvasHeight;
 canvas.width = canvasWidth;
 let ctx = canvas.getContext("2d");
 
+//Duke sprite
+let duke = new Image();
+duke.src='./sprites/Duke.png';
+
+let dukeWidth = 280; 
+let dukeHeight = 110; 
+let dukeRows = 1; 
+let dukeCols = 3; 
+let dWidth = dukeWidth/dukeCols;  
+let dHeight = dukeHeight/dukeRows; 
+let dukeCurFrame = 0; 
+let dukeFrameCount = 3; 
+let dukeX=300;
+let dukeY=370; 
+let dukeSrcX= 280; 
+let dukeSrcY= 460; 
 
 //Map test
 let map = ['111111111111', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '111111111111'];
@@ -26,6 +42,10 @@ let pos_yInit = 1.5;
 
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
+    
+    // dukeCurFrame = ++dukeCurFrame % dukeFrameCount;
+    // dukeSrcX = dukeCurFrame * dWidth;
+    // ctx.clearRect(dukeX,dukeY,dWidth,dHeight);
 }
 
 //Game loop
@@ -98,6 +118,9 @@ function draw(){
         ctx.lineTo(x, y);
         ctx.strokeStyle = 'brown';
         ctx.stroke();
+
+    ctx.drawImage(duke,dukeSrcX, dukeSrcY,dWidth,dHeight,dukeX,dukeY,dWidth,dHeight);
+
     }
 }
 
