@@ -20,7 +20,7 @@ let pHeight = pointerHeight/pointerRows;
 let pointerCurFrame = 0; 
 let pointerFrameCount = 1; 
 let pointerX=280;
-let pointerY=290; 
+let pointerY=260; 
 let pointerSrcX= 0; 
 let pointerSrcY= 0;
 
@@ -59,6 +59,9 @@ let dirWall;
 let pos_xInit = 1.5;
 let pos_yInit = 1.5;
 
+//FPS firstCheck
+var lastLoop = new Date();
+
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
     
@@ -73,7 +76,13 @@ function updateFrame(){
 
 //Game loop
 function draw(){
+    //fps Check
+    var thisLoop = new Date();
+    var fps = 1000 / (thisLoop - lastLoop);
+    lastLoop = thisLoop;
+    
     updateFrame();
+    
     for ( let x = 0; x < canvasWidth; x++ ) {
         let pos_x = pos_xInit;
         let pos_y = pos_yInit;
@@ -144,6 +153,10 @@ function draw(){
         
         ctx.drawImage(duke,dukeSrcX, dukeSrcY,dWidth,dHeight,dukeX,dukeY,dWidth,dHeight);
         ctx.drawImage(pointer,pointerSrcX, pointerSrcY,pWidth,pHeight,pointerX,pointerY,pWidth,pHeight);
+        
+        //Draw fps
+        ctx.font="20px helvetica";
+        ctx.fillText(`fps: ${fps.toFixed(0)}`, 10, 20);
     }
 }
 
