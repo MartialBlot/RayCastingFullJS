@@ -138,37 +138,29 @@ document.addEventListener('keyup',function(e){
 
 function gameLoop() {
     //Camera
-    //rightLook
+    //right
     if(keyState[39]){
         dir_player-=3;
     }
-    //LeftLook
+    //Gauche
     if(keyState[37]){
         dir_player+=3;
     }
     //right
     if (keyState[68]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;     
+        pos_xInit += 0.1;      
     }
     //left
     if (keyState[65]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;        
+        pos_xInit -= 0.1;        
     }
     //up
     if (keyState[87]){    
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        pos_yInit += 0.1;
     }
     //down
     if (keyState[83]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        pos_yInit -= 0.1;
     }
     //Shoot
     if (keyState[18]){
