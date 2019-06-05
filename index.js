@@ -38,11 +38,17 @@ let dukeY=370;
 let dukeSrcX= 280; 
 let dukeSrcY= 460;
 
-let shootSound = new Audio('sound/pistol.wav');
+let shootSound = new Audio('sound/pistol.mp3');
+let reloadSound = new Audio('sound/reload.mp3');
+let emptySound = new Audio('sound/empty.mp3');
 let oneShoot = true;
+let Ammo = 12;
+let reload = false;
+let oneReload = true;
 
 //Map test
 let map = ['111111111111', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '111111111111'];
+// let map = ['1111111111111111111111111111', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000001111001111000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001', '1111111111111111111111111111'];
 console.log(map)
 // Player position
 let dir_player = 270;
@@ -124,7 +130,7 @@ function draw(){
         }
         
         let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2))) * Math.cos(Math.abs((dir_player - angle) * Math.PI/180));
-        const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * 180 / Math.PI));
+        const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * Math.PI / 180));
         let wall_height = distance_ref / distance;
         
         let draw_start = (y - wall_height) / 2;
@@ -157,6 +163,13 @@ function draw(){
         //Draw fps
         ctx.font="20px helvetica";
         ctx.fillText(`fps: ${fps.toFixed(0)}`, 10, 20);
+        //Draw ammo
+        ctx.font="20px helvetica";
+        ctx.fillText(`${Ammo}/12`, 580, 470);
+        if(reload){
+            ctx.font="20px helvetica";
+            ctx.fillText('Reload', 470, 470);
+        }
     }
 }
 
@@ -167,7 +180,8 @@ document.addEventListener('keydown',function(e){
 },true);    
 document.addEventListener('keyup',function(e){
     keyState[e.keyCode || e.which] = false;
-    oneShoot= true; 
+    oneShoot= true;
+    oneReload = true;
 },true);
 
 function gameLoop() {
@@ -203,7 +217,7 @@ function gameLoop() {
         pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
     }
     //up
-    if (keyState[87]){ 
+    if (keyState[87]){
         let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
         pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
         pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
@@ -221,11 +235,30 @@ function gameLoop() {
     }
     //Shoot
     if (keyState[18]){
-        while(oneShoot){
-            shootSound.load();
-            shootSound.play();
-            oneShoot = false;
-            dukeShoot();
+        if(Ammo > 0){
+            while(oneShoot){
+                shootSound.load();
+                shootSound.play();
+                oneShoot = false;
+                dukeShoot();
+                Ammo=Ammo-1;
+            }
+        }
+        if(Ammo===0){
+            emptySound.load();
+            emptySound.play();
+            reload = true;
+        }
+    }
+    //Reload
+    if (keyState[82]){
+        while(oneReload){
+            reloadSound.load();
+            reloadSound.play();
+            Ammo = 12;
+            reload = false;
+            oneReload = false;
+            dukeReload();
         }
     }
     draw();
@@ -246,6 +279,22 @@ function dukeInit(){
     dukeY=370; 
     dukeSrcX= 280; 
     dukeSrcY= 460;
+} 
+
+function dukeReload(){
+    dukeWidth = 198; 
+    dukeHeight = 255; 
+    dukeRows = 1; 
+    dukeCols = 1;
+    dWidth = dukeWidth/dukeCols;
+    dHeight = dukeHeight/dukeRows;
+    dukeCurFrame = 0; 
+    dukeFrameCount = 1; 
+    dukeX=300;
+    dukeY=350; 
+    dukeSrcX= 0; 
+    dukeSrcY= 1440;
+    setTimeout(dukeInit, 200)    
 } 
 
 function dukeShoot(){
