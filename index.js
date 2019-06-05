@@ -7,7 +7,23 @@ let ctx = canvas.getContext("2d");
 
 //Duke sprite
 let duke = new Image();
-duke.src='./sprites/Duke.png';
+duke.src = './sprites/Duke.png';
+let pointer = new Image();
+pointer.src = './sprites/pointer.png';
+
+let pointerWidth = 10; 
+let pointerHeight = 10; 
+let pointerRows = 1; 
+let pointerCols = 1; 
+let pWidth = pointerWidth/pointerCols;  
+let pHeight = pointerHeight/pointerRows; 
+let pointerCurFrame = 0; 
+let pointerFrameCount = 1; 
+let pointerX=280;
+let pointerY=290; 
+let pointerSrcX= 0; 
+let pointerSrcY= 0;
+
 
 let dukeWidth = 100; 
 let dukeHeight = 110; 
@@ -45,6 +61,10 @@ let pos_yInit = 1.5;
 
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
+
+    pointerCurFrame = ++pointerCurFrame % pointerFrameCount;
+    pointerSrcX = pointerCurFrame * pWidth;
+    ctx.clearRect(pointerX,pointerY,pWidth,pHeight);
     
     dukeCurFrame = ++dukeCurFrame % dukeFrameCount;
     dukeSrcX = dukeCurFrame * dWidth;
@@ -123,6 +143,7 @@ function draw(){
         ctx.stroke();
         
         ctx.drawImage(duke,dukeSrcX, dukeSrcY,dWidth,dHeight,dukeX,dukeY,dWidth,dHeight);
+        ctx.drawImage(pointer,pointerSrcX, pointerSrcY,pWidth,pHeight,pointerX,pointerY,pWidth,pHeight);
     }
 }
 
@@ -148,21 +169,21 @@ function gameLoop() {
     }
     //right
     if (keyState[68]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;     
+            let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
     }
     //left
     if (keyState[65]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;        
+            let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2; 
     }
     //up
-    if (keyState[87]){    
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+    if (keyState[87]){ 
+            let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
     }
     //down
     if (keyState[83]){
@@ -173,9 +194,9 @@ function gameLoop() {
     //Shoot
     if (keyState[18]){
         while(oneShoot){
-        shootSound.play();
-        oneShoot = false;
-        dukeShoot();
+            shootSound.play();
+            oneShoot = false;
+            dukeShoot();
         }
     }
     draw();
@@ -211,6 +232,6 @@ function dukeShoot(){
     dukeY=370; 
     dukeSrcX= 280; 
     dukeSrcY= 460;
-
+    
     setTimeout(dukeInit, 100)    
 }
