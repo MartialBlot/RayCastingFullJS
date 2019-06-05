@@ -7,7 +7,25 @@ let ctx = canvas.getContext("2d");
 
 //Duke sprite
 let duke = new Image();
-duke.src='./sprites/Duke.png';
+duke.src = './sprites/Duke.png';
+let pointer = new Image();
+pointer.src = './sprites/pointer.png';
+//Run
+let acc = 0.2; 
+
+let pointerWidth = 10; 
+let pointerHeight = 10; 
+let pointerRows = 1; 
+let pointerCols = 1; 
+let pWidth = pointerWidth/pointerCols;  
+let pHeight = pointerHeight/pointerRows; 
+let pointerCurFrame = 0; 
+let pointerFrameCount = 1; 
+let pointerX=280;
+let pointerY=260; 
+let pointerSrcX= 0; 
+let pointerSrcY= 0;
+
 
 let dukeWidth = 100; 
 let dukeHeight = 110; 
@@ -23,10 +41,16 @@ let dukeSrcX= 280;
 let dukeSrcY= 460;
 
 let shootSound = new Audio('sound/pistol.mp3');
+let reloadSound = new Audio('sound/reload.mp3');
+let emptySound = new Audio('sound/empty.mp3');
 let oneShoot = true;
+let Ammo = 12;
+let reload = false;
+let oneReload = true;
 
 //Map test
 let map = ['111111111111', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '100000000001', '111111111111'];
+// let map = ['1111111111111111111111111111', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000001111001111000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001', '1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001','1000000000000000000000000001', '1111111111111111111111111111'];
 console.log(map)
 // Player position
 let dir_player = 270;
@@ -34,6 +58,7 @@ let FOV = 60;
 let cube_size = 1;
 let x = canvasWidth;
 let y = canvasHeight;
+const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * Math.PI / 180));
 
 //Wall's color
 let styleWall;
@@ -43,8 +68,15 @@ let dirWall;
 let pos_xInit = 1.5;
 let pos_yInit = 1.5;
 
+//FPS firstCheck
+var lastLoop = new Date();
+
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
+    
+    pointerCurFrame = ++pointerCurFrame % pointerFrameCount;
+    pointerSrcX = pointerCurFrame * pWidth;
+    ctx.clearRect(pointerX,pointerY,pWidth,pHeight);
     
     dukeCurFrame = ++dukeCurFrame % dukeFrameCount;
     dukeSrcX = dukeCurFrame * dWidth;
@@ -53,7 +85,13 @@ function updateFrame(){
 
 //Game loop
 function draw(){
+    //fps Check
+    var thisLoop = new Date();
+    var fps = 1000 / (thisLoop - lastLoop);
+    lastLoop = thisLoop;
+    
     updateFrame();
+    
     for ( let x = 0; x < canvasWidth; x++ ) {
         let pos_x = pos_xInit;
         let pos_y = pos_yInit;
@@ -65,15 +103,13 @@ function draw(){
         
         while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
             map_x = map_x + step_x;
-            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1)
-            {
+            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1){
                 styleWall = 'red';
                 dirWall = 1;
                 break;
             }
-            map_y = map_y + step_y
-            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1)
-            {
+            map_y = map_y + step_y;
+            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1){
                 styleWall = 'orange';
                 dirWall = 2;
                 break;
@@ -95,7 +131,6 @@ function draw(){
         }
         
         let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2))) * Math.cos(Math.abs((dir_player - angle) * Math.PI/180));
-        const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * 180 / Math.PI));
         let wall_height = distance_ref / distance;
         
         let draw_start = (y - wall_height) / 2;
@@ -123,6 +158,18 @@ function draw(){
         ctx.stroke();
         
         ctx.drawImage(duke,dukeSrcX, dukeSrcY,dWidth,dHeight,dukeX,dukeY,dWidth,dHeight);
+        ctx.drawImage(pointer,pointerSrcX, pointerSrcY,pWidth,pHeight,pointerX,pointerY,pWidth,pHeight);
+        
+        //Draw fps
+        ctx.font="20px helvetica";
+        ctx.fillText(`fps: ${fps.toFixed(0)}`, 10, 20);
+        //Draw ammo
+        ctx.font="20px helvetica";
+        ctx.fillText(`${Ammo}/12`, 580, 470);
+        if(reload){
+            ctx.font="20px helvetica";
+            ctx.fillText('Reload', 470, 470);
+        }
     }
 }
 
@@ -133,41 +180,104 @@ document.addEventListener('keydown',function(e){
 },true);    
 document.addEventListener('keyup',function(e){
     keyState[e.keyCode || e.which] = false;
-    oneShoot= true; 
+    oneShoot= true;
+    oneReload = true;
 },true);
 
 function gameLoop() {
     //Camera
-    //right
+    //rightLook
     if(keyState[39]){
         dir_player-=3;
     }
-    //Gauche
+    //LeftLook
     if(keyState[37]){
         dir_player+=3;
     }
     //right
     if (keyState[68]){
-        pos_xInit += 0.1;      
+        if(keyState[16]){
+            acc = 0.3; 
+        } else{
+            acc = 0.2;
+        }
+        angle = dir_player + 90; 
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* acc;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* acc;
+        }
     }
+    
     //left
     if (keyState[65]){
-        pos_xInit -= 0.1;        
+        if(keyState[16]){
+            acc = 0.3; 
+        } else{
+            acc = 0.2;
+        }
+        angle = dir_player + 270;
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* acc;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* acc; 
+        }
     }
+    
     //up
-    if (keyState[87]){    
-        pos_yInit += 0.1;
+    if (keyState[87]){
+        if(keyState[16]){
+            acc = 0.3; 
+        } else{
+            acc = 0.2;
+        }
+        angle = dir_player;
+        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){   
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* acc;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* acc;
+        }
     }
+    
     //down
     if (keyState[83]){
-        pos_yInit -= 0.1;
+        angle = dir_player + 180;
+        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        }
     }
     //Shoot
     if (keyState[18]){
-        while(oneShoot){
-        shootSound.play();
-        oneShoot = false;
-        dukeShoot();
+        if(Ammo > 0){
+            while(oneShoot){
+                shootSound.load();
+                shootSound.play();
+                oneShoot = false;
+                dukeShoot();
+                Ammo=Ammo-1;
+            }
+        }
+        if(Ammo===0){
+            emptySound.load();
+            emptySound.play();
+            reload = true;
+        }
+    }
+    //Reload
+    if (keyState[82]){
+        while(oneReload){
+            reloadSound.load();
+            reloadSound.play();
+            Ammo = 12;
+            reload = false;
+            oneReload = false;
+            dukeReload();
         }
     }
     draw();
@@ -190,6 +300,22 @@ function dukeInit(){
     dukeSrcY= 460;
 } 
 
+function dukeReload(){
+    dukeWidth = 198; 
+    dukeHeight = 255; 
+    dukeRows = 1; 
+    dukeCols = 1;
+    dWidth = dukeWidth/dukeCols;
+    dHeight = dukeHeight/dukeRows;
+    dukeCurFrame = 0; 
+    dukeFrameCount = 1; 
+    dukeX=300;
+    dukeY=350; 
+    dukeSrcX= 0; 
+    dukeSrcY= 1440;
+    setTimeout(dukeInit, 200)    
+} 
+
 function dukeShoot(){
     dukeWidth = 280; 
     dukeHeight = 110; 
@@ -203,6 +329,5 @@ function dukeShoot(){
     dukeY=370; 
     dukeSrcX= 280; 
     dukeSrcY= 460;
-
     setTimeout(dukeInit, 100)    
 }

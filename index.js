@@ -10,6 +10,8 @@ let duke = new Image();
 duke.src = './sprites/Duke.png';
 let pointer = new Image();
 pointer.src = './sprites/pointer.png';
+//Run
+let acc = 0.2; 
 
 let pointerWidth = 10; 
 let pointerHeight = 10; 
@@ -56,6 +58,7 @@ let FOV = 60;
 let cube_size = 1;
 let x = canvasWidth;
 let y = canvasHeight;
+const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * Math.PI / 180));
 
 //Wall's color
 let styleWall;
@@ -100,15 +103,13 @@ function draw(){
         
         while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
             map_x = map_x + step_x;
-            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1)
-            {
+            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1){
                 styleWall = 'red';
                 dirWall = 1;
                 break;
             }
-            map_y = map_y + step_y
-            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1)
-            {
+            map_y = map_y + step_y;
+            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1){
                 styleWall = 'orange';
                 dirWall = 2;
                 break;
@@ -130,7 +131,6 @@ function draw(){
         }
         
         let distance = Math.sqrt(Math.abs(Math.pow(map_x, 2)) + Math.abs(Math.pow(map_y, 2))) * Math.cos(Math.abs((dir_player - angle) * Math.PI/180));
-        const distance_ref = ((canvasWidth/2)/Math.tan((FOV/2) * Math.PI / 180));
         let wall_height = distance_ref / distance;
         
         let draw_start = (y - wall_height) / 2;
@@ -196,61 +196,52 @@ function gameLoop() {
     }
     //right
     if (keyState[68]){
+        if(keyState[16]){
+            acc = 0.3; 
+        } else{
+            acc = 0.2;
+        }
         angle = dir_player + 90; 
-        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
-            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* acc;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
-            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
-        }
-    }
-    if (keyState[68] && keyState[16]){
-        angle = dir_player + 90;  
-        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
-            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.3;
-        }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
-            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* acc;
         }
     }
+    
     //left
     if (keyState[65]){
+        if(keyState[16]){
+            acc = 0.3; 
+        } else{
+            acc = 0.2;
+        }
         angle = dir_player + 270;
-        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
-            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* acc;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
-            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2; 
-        }
-    }
-    if (keyState[65] && keyState[16]){
-        angle = dir_player + 270;        
-        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
-            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.3;
-        }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
-            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* acc; 
         }
     }
+    
     //up
     if (keyState[87]){
-        angle = dir_player;
-        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
-            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        if(keyState[16]){
+            acc = 0.3; 
+        } else{
+            acc = 0.2;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
-            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        angle = dir_player;
+        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){   
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* acc;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* acc;
         }
     }
-    if (keyState[87] && keyState[16]){
-        angle = dir_player;
-        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
-            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.3;
-        }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
-            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
-        }
-    }
+    
     //down
     if (keyState[83]){
         angle = dir_player + 180;
