@@ -38,7 +38,7 @@ let dukeY=370;
 let dukeSrcX= 280; 
 let dukeSrcY= 460;
 
-let shootSound = new Audio('sound/pistol.mp3');
+let shootSound = new Audio('sound/pistol.wav');
 let oneShoot = true;
 
 //Map test
@@ -61,7 +61,7 @@ let pos_yInit = 1.5;
 
 function updateFrame(){
     ctx.clearRect(0,0,x,y);
-
+    
     pointerCurFrame = ++pointerCurFrame % pointerFrameCount;
     pointerSrcX = pointerCurFrame * pWidth;
     ctx.clearRect(pointerX,pointerY,pWidth,pHeight);
@@ -169,21 +169,36 @@ function gameLoop() {
     }
     //right
     if (keyState[68]){
-            let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
+        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+    }
+    if (keyState[68] && keyState[16]){
+        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
+        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.3;
+        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.3;
     }
     //left
     if (keyState[65]){
-            let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2; 
+        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
+        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2; 
+    }
+    if (keyState[65] && keyState[16]){
+        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
+        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.3;
+        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
     }
     //up
     if (keyState[87]){ 
-            let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
+        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+    }
+    if (keyState[87] && keyState[16]){
+        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
+        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.3;
+        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
     }
     //down
     if (keyState[83]){
@@ -194,6 +209,7 @@ function gameLoop() {
     //Shoot
     if (keyState[18]){
         while(oneShoot){
+            shootSound.load();
             shootSound.play();
             oneShoot = false;
             dukeShoot();
@@ -232,6 +248,5 @@ function dukeShoot(){
     dukeY=370; 
     dukeSrcX= 280; 
     dukeSrcY= 460;
-    
     setTimeout(dukeInit, 100)    
 }
