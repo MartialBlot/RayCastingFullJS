@@ -196,42 +196,70 @@ function gameLoop() {
     }
     //right
     if (keyState[68]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        angle = dir_player + 90; 
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        }
     }
     if (keyState[68] && keyState[16]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.3;
-        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        angle = dir_player + 90;  
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.3;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        }
     }
     //left
     if (keyState[65]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2; 
+        angle = dir_player + 270;
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2; 
+        }
     }
     if (keyState[65] && keyState[16]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+120;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.3;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        angle = dir_player + 270;        
+        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){
+            pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.3;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        }
     }
     //up
     if (keyState[87]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        angle = dir_player;
+        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        }
     }
     if (keyState[87] && keyState[16]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-        pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.3;
-        pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        angle = dir_player;
+        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.3;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.3;
+        }
     }
     //down
     if (keyState[83]){
-        let angle = (dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth ))+28;        
-        pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* 0.2;
-        pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        angle = dir_player + 180;
+        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
+            pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
+        }
+        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+            pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
+        }
     }
     //Shoot
     if (keyState[18]){
