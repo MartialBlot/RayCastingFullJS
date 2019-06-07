@@ -85,12 +85,13 @@ function updateFrame(){
 
 //Game loop
 function draw(){
+
+    updateFrame();
+
     //fps Check
     var thisLoop = new Date();
     var fps = 1000 / (thisLoop - lastLoop);
     lastLoop = thisLoop;
-    
-    updateFrame();
     
     for ( let x = 0; x < canvasWidth; x++ ) {
         let pos_x = pos_xInit;
@@ -98,18 +99,18 @@ function draw(){
         let angle = dir_player + ( FOV/2 ) - x * ( FOV / canvasWidth );        
         map_x = pos_x;
         map_y = pos_y;
-        step_x = -Math.cos( angle * ( Math.PI/180 )  )* 0.01;
-        step_y = -Math.sin( angle * ( Math.PI/180 )  )* 0.01;
+        step_x = -Math.cos( angle * ( Math.PI/180 )  ) * 0.01;
+        step_y = -Math.sin( angle * ( Math.PI/180 )  ) * 0.01;
         
         while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
             map_x = map_x + step_x;
-            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1){
+            if(map[Math.floor(map_y)][Math.floor(map_x)] === '1'){
                 styleWall = 'red';
                 dirWall = 1;
                 break;
             }
             map_y = map_y + step_y;
-            if(parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 1){
+            if(map[Math.floor(map_y)][Math.floor(map_x)] === '1'){
                 styleWall = 'orange';
                 dirWall = 2;
                 break;
@@ -118,7 +119,7 @@ function draw(){
         
         if(dirWall === 1){
             //FISH-EYE
-            // map_x = (Math.floor(map_x) - pos_x); 
+            // map_x = (Math.ceil(map_x) - pos_x); 
             map_x = (map_x - pos_x);
             map_y = (map_y - pos_y);
         }
@@ -135,6 +136,13 @@ function draw(){
         
         let draw_start = (y - wall_height) / 2;
         let draw_end = y - draw_start;
+
+        if (draw_start < 0){
+            draw_start = 0
+        }
+        if (draw_end > 480){
+            draw_end = 480
+        }
         
         //Draw Sky
         ctx.beginPath();
@@ -202,10 +210,10 @@ function gameLoop() {
             acc = 0.2;
         }
         angle = dir_player + 90; 
-        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){
+        if(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)] !== '1'){
             pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* acc;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+        if(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)] !== '1'){   
             pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* acc;
         }
     }
@@ -218,10 +226,10 @@ function gameLoop() {
             acc = 0.2;
         }
         angle = dir_player + 270;
-        if(parseInt(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){
+        if(map[Math.floor(pos_yInit + Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)] !== '1'){
             pos_yInit += Math.sin( angle * ( Math.PI/180 )  )* acc;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+        if(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + Math.cos( angle * ( Math.PI/180 )  )* acc)] !== '1'){   
             pos_xInit += Math.cos( angle * ( Math.PI/180 )  )* acc; 
         }
     }
@@ -234,10 +242,10 @@ function gameLoop() {
             acc = 0.2;
         }
         angle = dir_player;
-        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)]) !== 1){   
+        if(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* acc)][Math.floor(pos_xInit)] !== '1'){   
             pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* acc;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* acc)]) !== 1){   
+        if(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* acc)] !== '1'){   
             pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* acc;
         }
     }
@@ -245,10 +253,10 @@ function gameLoop() {
     //down
     if (keyState[83]){
         angle = dir_player + 180;
-        if(parseInt(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)]) !== 1){   
+        if(map[Math.floor(pos_yInit + -Math.sin( angle * ( Math.PI/180 )  )* 0.2)][Math.floor(pos_xInit)] !== '1'){   
             pos_yInit += -Math.sin( angle * ( Math.PI/180 )  )* 0.2;
         }
-        if(parseInt(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)]) !== 1){   
+        if(map[Math.floor(pos_yInit)][Math.floor(pos_xInit + -Math.cos( angle * ( Math.PI/180 )  )* 0.2)] !== '1'){   
             pos_xInit += -Math.cos( angle * ( Math.PI/180 )  )* 0.2;
         }
     }
@@ -283,7 +291,9 @@ function gameLoop() {
     draw();
     setTimeout(gameLoop, 10);
 }
+
 gameLoop();
+
 
 function dukeInit(){
     dukeWidth = 100; 

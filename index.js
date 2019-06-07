@@ -72,6 +72,7 @@ let pos_yInit = 1.5;
 var lastLoop = new Date();
 
 function updateFrame(){
+
     ctx.clearRect(0,0,x,y);
     
     pointerCurFrame = ++pointerCurFrame % pointerFrameCount;
@@ -102,7 +103,7 @@ function draw(){
         step_x = -Math.cos( angle * ( Math.PI/180 )  ) * 0.01;
         step_y = -Math.sin( angle * ( Math.PI/180 )  ) * 0.01;
         
-        while (parseInt(map[Math.floor(map_y)][Math.floor(map_x)]) === 0){
+        while (map[Math.floor(map_y)][Math.floor(map_x)] === '0'){
             map_x = map_x + step_x;
             if(map[Math.floor(map_y)][Math.floor(map_x)] === '1'){
                 styleWall = 'red';
