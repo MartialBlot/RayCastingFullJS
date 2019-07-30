@@ -119,6 +119,17 @@ function updateFrame(){
     ctx.clearRect(dukeX,dukeY,dWidth,dHeight);
 }
 
+//Controls
+let keyState = {};    
+document.addEventListener('keydown',function(e){
+    keyState[e.keyCode || e.which] = true;
+},true);    
+document.addEventListener('keyup',function(e){
+    keyState[e.keyCode || e.which] = false;
+    oneShoot= true;
+    oneReload = true;
+},true);
+
 //Game loop
 function draw(){
     
@@ -282,20 +293,7 @@ function draw(){
             ctx.fillText('Reload', 470, 470);
         }
     }
-}
 
-//Controls
-let keyState = {};    
-document.addEventListener('keydown',function(e){
-    keyState[e.keyCode || e.which] = true;
-},true);    
-document.addEventListener('keyup',function(e){
-    keyState[e.keyCode || e.which] = false;
-    oneShoot= true;
-    oneReload = true;
-},true);
-
-function gameLoop() {
     //Camera
     //rightLook
     if(keyState[39]){
@@ -382,6 +380,7 @@ function gameLoop() {
             pos_xInit += Math.cos( angle * ( PI/180 )  )* 0.2;
         }
     }
+    
     //Shoot
     if (keyState[18]){
         if(Ammo > 0){
@@ -410,13 +409,10 @@ function gameLoop() {
             dukeReload();
         }
     }
-    requestAnimationFrame(gameLoop);
     requestAnimationFrame(draw);
 }
 
 draw();
-gameLoop();
-
 
 function dukeInit(){
     dukeWidth = 100; 
